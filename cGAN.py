@@ -156,7 +156,6 @@ gan = cGAN()
 gan.train(train_loader, hp.epochs, hp.n_iters, hp.dis_epochs, device)
 gan.plot_()
 gan.plot_(s = 'losses')
-'''
 
 labels = torch.tensor([[0],[1],[2]])
 labels = nn.functional.one_hot(labels, hp.num_classes)
@@ -165,4 +164,3 @@ gen_images = gan.infer(labels = labels)
 
 print(gen_images.shape)
 gan.display_images(gen_images)
-'''
