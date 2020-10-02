@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-import hyperparameters as hp
 
 def conv2d(Cin, Cout, k_size, pad, stride):
     layer = nn.Sequential(
@@ -32,10 +31,10 @@ def final(Cin, Cout, num_features):
     return layers
 
 class CGANDiscriminator(nn.Module):
-    def __init__(self):
+    def __init__(self, num_classes, dis_inp):
         super(CGANDiscriminator, self).__init__()
-
-        self.label_embedding = nn.Linear(hp.num_classes, hp.discriminator_input*hp.discriminator_input)
+        self.dis_inp = dis_inp
+        self.label_embedding = nn.Linear(num_classes, dis_inp*dis_inp)
         self.image_dropout = nn.Dropout(p = 0.25)
         self.conv2d_1 = conv2d(4, 64, k_size = 3, pad = 1, stride = 1)
         self.conv_block1 = conv_block(64, 128, k_size = 1, pad = 0, stride = 2)     #downsampling
@@ -51,7 +50,7 @@ class CGANDiscriminator(nn.Module):
         inp_img = self.image_dropout(x)
 
         N = x.shape[0]
-        h = hp.discriminator_input
+        h = self.dis_inp
         w = h
         l = torch.reshape(embedded_labels, (N, 1, h, w))
         inp = torch.cat([inp_img, l], dim = 1)

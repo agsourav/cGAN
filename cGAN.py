@@ -3,17 +3,15 @@ import torch.nn as nn
 import torch.optim as optim
 from generator import cGANGenerator
 from discriminator import CGANDiscriminator
-import hyperparameters as hp
-import utils
 import numpy as np
 import matplotlib.pyplot as plt
 import os
 
 class cGAN():
-    def __init__(self):
+    def __init__(self, num_classes, gen_inp, dis_inp, latent_size):
 
-        self.gen = cGANGenerator()
-        self.dis = CGANDiscriminator()
+        self.gen = cGANGenerator(num_classes, latent_size, gen_inp)
+        self.dis = CGANDiscriminator(num_classes, dis_inp)
         self.dis_path = 'weights/discriminator.pt'
         self.gen_path = 'weights/generator.pt'
         self.dis_check = ''
@@ -41,12 +39,12 @@ class cGAN():
         disScore = self.dis(x, labels)
         return disScore
 
-    def train(self, train_loader, epochs, num_iters, dis_epochs, device):
+    def train(self, train_loader, epochs, num_iters, gen_lr, dis_lr, dis_epochs, num_classes, device):
 
         self.dis.to(device)
         self.gen.to(device)
-        optim_G = optim.Adam(self.gen.parameters(), lr = hp.gen_lr)
-        optim_D = optim.Adam(self.dis.parameters(), lr = hp.dis_lr)
+        optim_G = optim.Adam(self.gen.parameters(), lr = gen_lr)
+        optim_D = optim.Adam(self.dis.parameters(), lr = dis_lr)
         
         dataiter = iter(train_loader)
         start_epoch = 0
@@ -60,9 +58,10 @@ class cGAN():
                 for j in range(dis_epochs-1):
                     optim_D.zero_grad()
                     real_images, labels = next(dataiter)
-                    labels = nn.functional.one_hot(labels, hp.num_classes)
+                    labels = nn.functional.one_hot(labels, num_classes)
                     labels = labels.float()
-                    z = torch.randn(size = (hp.batch_size, 1))
+                    batch_size = real_images.shape[0]
+                    z = torch.randn(size = (batch_size, 1))
                     real_images, labels, z = real_images.to(device), labels.to(device), z.to(device)
                     
                     disScore = self.get_disScore(real_images, labels)
@@ -79,10 +78,10 @@ class cGAN():
                 optim_D.zero_grad()
                 optim_G.zero_grad()
                 real_images, labels = next(dataiter)
-
-                labels = nn.functional.one_hot(labels, hp.num_classes)
+                batch_size = real_images.shape[0]
+                labels = nn.functional.one_hot(labels, num_classes)
                 labels = labels.float()
-                z = torch.randn(size = (hp.batch_size, 1))
+                z = torch.randn(size = (batch_size, 1))
                 real_images, labels, z = real_images.to(device), labels.to(device), z.to(device)
                 disScore = self.get_disScore(real_images, labels)
                 genScore = self.get_genScore(z, labels)
@@ -145,22 +144,3 @@ class cGAN():
             plt.title('scores vs epochs');
             plt.show()
 
-    
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-train_loader = torch.utils.data.DataLoader(utils.training_dataset,
-hp.batch_size, shuffle = True, num_workers= 4)
-loss_func = nn.NLLLoss()
-gan = cGAN()
-
-gan.train(train_loader, hp.epochs, hp.n_iters, hp.dis_epochs, device)
-gan.plot_()
-gan.plot_(s = 'losses')
-
-labels = torch.tensor([[0],[1],[2]])
-labels = nn.functional.one_hot(labels, hp.num_classes)
-labels = labels.float()
-gen_images = gan.infer(labels = labels)
-
-print(gen_images.shape)
-gan.display_images(gen_images)

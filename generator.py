@@ -1,7 +1,5 @@
 import torch
 import torch.nn as nn
-import hyperparameters as hp
-import matplotlib.pyplot as plt
 import numpy as np
 
 def transpose2d(in_ch, out_ch, k_sizes = [5,3], dil = [2,1], ops = [0,1]):
@@ -26,21 +24,22 @@ def transposeF(in_ch, out_ch = 3, kernel_size = 3, dil = 1, op = 0, pad = 0, str
 
 
 class cGANGenerator(nn.Module):
-    def __init__(self):
+    def __init__(self, num_classes, latent_size, gen_inp):
         super(cGANGenerator, self).__init__()
+        self.gen_inp = gen_inp
         self.latent_embedding = nn.Sequential(
-            nn.Linear(hp.latent_size, hp.generator_input)
+            nn.Linear(latent_size, gen_inp)
         ) 
 
         self.condition_embedding = nn.Sequential(
-            nn.Linear(hp.num_classes, hp.generator_input)
+            nn.Linear(num_classes, gen_inp)
         )
 
     def forward(self, x, con):
         z = self.latent_embedding(x)
         c = self.condition_embedding(con)
 
-        h = int(np.sqrt(hp.generator_input))
+        h = int(np.sqrt(self.gen_inp))
         w = h
         N = z.shape[0]      #batch_size
         z = torch.reshape(z, (N,1,h,w))

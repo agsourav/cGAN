@@ -1,22 +1,20 @@
 import torch
 from torchvision import transforms, datasets
 import os
+import argparse
 
-data_transform = transforms.Compose(
-    [transforms.Resize((256,256)),
-    transforms.ToTensor()]
-)
+def arg_parse():
+    parser = argparse.ArgumentParser(description= 'Conditional GAN')
+    parser.add_argument('--image-dir', dest = 'image_dir', help = 'specify the path to images',
+    default = 'real_images', type = str)
+    parser.add_argument('--eps', dest = 'epochs', help = 'number of epochs to train')
+    parser.add_argument('--gen-lr', dest = 'gen_lr', help = 'generator learning rate',
+    default = 0.0002)
+    parser.add_argument('--dis-lr', dest = 'dis_lr', help = 'discriminator learning rate',
+    default = 0.0001)
+    parser.add_argument('--train', dest = 'train', help = '1 to train/0 to infer', default = 1)
+    parser.add_argument('--bs', dest = 'batch_size', help = 'batch size for training', default = 4)
+    parser.add_argument('--dis-eps', dest = 'dis_eps', help = 'number of iter for discriminator for each iter of generator',
+    default = 2)
+    return parser.parse_args()
 
-dataset = datasets.ImageFolder(root = 'real_images',
-transform = data_transform)
-
-dataset_path = 'real_images'
-pallets = len(os.listdir(os.path.join(dataset_path, 'pallet')))
-forklifts = len(os.listdir(os.path.join(dataset_path, 'forklift')))
-person = len(os.listdir(os.path.join(dataset_path, 'person')))
-
-tot = pallets + forklifts + person
-train_ratio = 0.8
-num_train_samples = int(0.8*tot) 
-
-training_dataset, validation_dataset = torch.utils.data.random_split(dataset, lengths = [num_train_samples, tot - num_train_samples])
