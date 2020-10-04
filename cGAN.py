@@ -31,12 +31,17 @@ class cGAN():
             self.disScores = self.gen_check['score']
 
     def get_genScore(self, z, c):
+        print(next(self.gen.parameters()).is_cuda)
+        print(z.is_cuda, c.is_cuda)
         gen_out = self.gen(z,c)
         genScore = self.dis(gen_out, c)
         return genScore
 
     def get_disScore(self, x, labels):
+        print(next(self.dis.parameters()).is_cuda)
+        print(x.is_cuda, labels.is_cuda)
         disScore = self.dis(x, labels)
+        print(disScore.is_cuda)
         return disScore
 
     def train(self, train_loader, epochs, num_iters, gen_lr, dis_lr, dis_epochs, num_classes, device):
