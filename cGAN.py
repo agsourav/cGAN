@@ -34,6 +34,7 @@ class cGAN():
         print(next(self.gen.parameters()).is_cuda)
         print(z.is_cuda, c.is_cuda)
         gen_out = self.gen(z,c)
+        print(gen_out.is_cuda)
         genScore = self.dis(gen_out, c)
         return genScore
 
