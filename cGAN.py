@@ -32,13 +32,11 @@ class cGAN():
 
     def get_genScore(self, z, c):
         gen_out = self.gen(z,c)
-        print(gen_out.is_cuda)
         genScore = self.dis(gen_out, c)
         return genScore
 
     def get_disScore(self, x, labels):
         disScore = self.dis(x, labels)
-        print(disScore.is_cuda)
         return disScore
 
     def train(self, train_loader, epochs, num_iters, gen_lr, dis_lr, dis_epochs, num_classes, device):
@@ -69,7 +67,6 @@ class cGAN():
                     #print(next(self.dis.parameters()).is_cuda, next(self.gen.parameters()).is_cuda)
                     try:
                         disScore = self.get_disScore(real_images, labels)
-                        print(disScore)
                         genScore = self.get_genScore(z, labels)
                     except Exception as e:
                         print(e)

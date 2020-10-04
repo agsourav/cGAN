@@ -45,7 +45,6 @@ class cGANGenerator(nn.Module):
         c = torch.reshape(c, (N,1,h,w))
         
         inp = torch.cat([z,c], dim = 1)     #(N, C, Hin, Win) 
-        print(inp.is_cuda)
         transpose_layers = [transpose2d(inp.shape[1], inp.shape[1]), transpose2d(inp.shape[1], inp.shape[1]),
         transpose2d(inp.shape[1], inp.shape[1])]        #(Nx2x16x16) -> (Nx2x254x254)
         transF = [transposeF(inp.shape[1])]             #(Nx2x254x254) -> (Nx3x256x256)
