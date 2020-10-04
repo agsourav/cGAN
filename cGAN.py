@@ -95,10 +95,10 @@ class cGAN():
                 if k%5==0:
                     print('\tdiscriminator score: {0}\n\tgenerator score: {1}'.format(disScore, genScore))
                     print('discriminator loss {0}\tgenerator loss: {1}'.format(disloss.mean().item(), genloss.mean().item()))
-                try:
-                    disloss.mean().backward(retain_graph = True)
+
+                    disloss.sum().backward(retain_graph = True)
                     optim_D.step()
-                    genloss.mean().backward()
+                    genloss.sum().backward()
                     optim_G.step()
                 except Exception as e:
                     print(e)
