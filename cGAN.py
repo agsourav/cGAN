@@ -43,6 +43,7 @@ class cGAN():
 
         self.dis.to(device)
         self.gen.to(device)
+        
         optim_G = optim.Adam(self.gen.parameters(), lr = gen_lr)
         optim_D = optim.Adam(self.dis.parameters(), lr = dis_lr)
         
@@ -63,10 +64,13 @@ class cGAN():
                     batch_size = real_images.shape[0]
                     z = torch.randn(size = (batch_size, 1))
                     real_images, labels, z = real_images.to(device), labels.to(device), z.to(device)
-                    
-                    disScore = self.get_disScore(real_images, labels)
-                    genScore = self.get_genScore(z, labels)
-                    
+                    print(next(self.dis.parameters()).is_cuda, next(self.gen.parameters()).is_cuda)
+                    try:
+                        disScore = self.get_disScore(real_images, labels)
+                        genScore = self.get_genScore(z, labels)
+                    except Exception as e:
+                        print(e)
+                        exit(0)
                     try:
                         disloss = -disScore - (1 - genScore) 
                         #print('dis iter: {0}\tdiscriminator loss {1}'.format(j, disloss))

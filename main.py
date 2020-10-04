@@ -1,6 +1,6 @@
 import torch
 from torchvision import transforms, datasets
-
+from torchsummary import summary
 from cGAN import cGAN
 from utils import *
 import os
@@ -51,9 +51,8 @@ if train:
 
     gan = cGAN(num_classes, generator_inp, discriminator_inp, latent_size)
     gan.train(train_loader, epochs, num_iters, gen_lr, dis_lr, dis_iter, num_classes, device)
-
-    gan.plot_()
-    gan.plot_(s = 'losses')
+    #gan.plot_()
+    #gan.plot_(s = 'losses')
 
 else:
     gan = cGAN(num_classes, generator_inp, discriminator_inp, latent_size)
