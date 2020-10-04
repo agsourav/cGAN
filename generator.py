@@ -38,7 +38,6 @@ class cGANGenerator(nn.Module):
     def forward(self, x, con):
         z = self.latent_embedding(x)
         c = self.condition_embedding(con)
-        print(z.is_cuda, c.is_cuda)
         h = int(np.sqrt(self.gen_inp))
         w = h
         N = z.shape[0]      #batch_size
@@ -52,7 +51,8 @@ class cGANGenerator(nn.Module):
         transF = [transposeF(inp.shape[1])]             #(Nx2x254x254) -> (Nx3x256x256)
         generator_layers = transpose_layers + transF
         model = nn.Sequential(*generator_layers)
-        print(next(model.parameters()).is_cuda)
+        if inp.is_cuda:
+            model.cuda()
         gen_image = model(inp)              
         return gen_image
     
