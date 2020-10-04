@@ -95,11 +95,14 @@ class cGAN():
                 if k%5==0:
                     print('\tdiscriminator score: {0}\n\tgenerator score: {1}'.format(disScore, genScore))
                     print('discriminator loss {0}\tgenerator loss: {1}'.format(disloss.mean().item(), genloss.mean().item()))
-                
-                disloss.mean().backward(retain_graph = True)
-                optim_D.step()
-                genloss.mean().backward()
-                optim_G.step()
+                try:
+                    disloss.mean().backward(retain_graph = True)
+                    optim_D.step()
+                    genloss.mean().backward()
+                    optim_G.step()
+                except Exception as e:
+                    print(e)
+                    exit(0)
             np.append(self.disLosses, disloss.mean().item())
             np.append(self.genLosses, genloss.mean().item())
             np.append(self.genScores, genScore.mean().item())
