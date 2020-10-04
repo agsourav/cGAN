@@ -31,16 +31,12 @@ class cGAN():
             self.disScores = self.gen_check['score']
 
     def get_genScore(self, z, c):
-        print(next(self.gen.parameters()).is_cuda)
-        print(z.is_cuda, c.is_cuda)
         gen_out = self.gen(z,c)
         print(gen_out.is_cuda)
         genScore = self.dis(gen_out, c)
         return genScore
 
     def get_disScore(self, x, labels):
-        print(next(self.dis.parameters()).is_cuda)
-        print(x.is_cuda, labels.is_cuda)
         disScore = self.dis(x, labels)
         print(disScore.is_cuda)
         return disScore
@@ -70,9 +66,10 @@ class cGAN():
                     batch_size = real_images.shape[0]
                     z = torch.randn(size = (batch_size, 1))
                     real_images, labels, z = real_images.to(device), labels.to(device), z.to(device)
-                    print(next(self.dis.parameters()).is_cuda, next(self.gen.parameters()).is_cuda)
+                    #print(next(self.dis.parameters()).is_cuda, next(self.gen.parameters()).is_cuda)
                     try:
                         disScore = self.get_disScore(real_images, labels)
+                        print(disScore)
                         genScore = self.get_genScore(z, labels)
                     except Exception as e:
                         print(e)
