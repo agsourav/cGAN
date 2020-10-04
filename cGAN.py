@@ -100,9 +100,7 @@ class cGAN():
                     optim_D.step()
                     genloss.sum().backward()
                     optim_G.step()
-                except Exception as e:
-                    print(e)
-                    exit(0)
+                
             np.append(self.disLosses, disloss.mean().item())
             np.append(self.genLosses, genloss.mean().item())
             np.append(self.genScores, genScore.mean().item())
