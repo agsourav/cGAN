@@ -51,6 +51,7 @@ lengths = [num_train_samples, tot - num_train_samples])
 
 
 if train:
+    print(num_train_samples)
     train_loader = torch.utils.data.DataLoader(training_dataset, batch_size = batch_size,
     shuffle = True, num_workers= 4)
 
