@@ -47,12 +47,13 @@ class cGAN():
         optim_G = optim.Adam(self.gen.parameters(), lr = gen_lr)
         optim_D = optim.Adam(self.dis.parameters(), lr = dis_lr)
         
-        dataiter = iter(train_loader)
+        
         start_epoch = 0
         if self.gen_check != '':
             start_epoch = self.gen_check['epoch']
         end_epoch = start_epoch + epochs
         for i in range(start_epoch, end_epoch):
+            dataiter = iter(train_loader)
             print('Epoch: {0}'.format(i+1))
             for k in range(num_iters):
                 print('\titeration: {0}'.format(k+1))

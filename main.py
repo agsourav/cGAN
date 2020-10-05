@@ -36,8 +36,8 @@ tot = pallets + forklifts + person
 train_ratio = 0.8
 num_train_samples = int(0.8*tot) 
 
-num_iters = num_train_samples//batch_size
-
+num_iters = num_train_samples//(batch_size*dis_iter)
+print(num_iters)
 data_transform = transforms.Compose(
     [transforms.Resize((256,256)),
     transforms.ToTensor()]
@@ -56,8 +56,8 @@ if train:
 
     gan = cGAN(num_classes, generator_inp, discriminator_inp, latent_size)
     gan.train(train_loader, epochs, num_iters, gen_lr, dis_lr, dis_iter, num_classes, device)
-    #gan.plot_()
-    #gan.plot_(s = 'losses')
+    gan.plot_()
+    gan.plot_(s = 'losses')
 
 else:
     gan = cGAN(num_classes, generator_inp, discriminator_inp, latent_size)
