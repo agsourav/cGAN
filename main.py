@@ -1,4 +1,5 @@
 import torch
+import torch.nn as nn
 from torchvision import transforms, datasets
 from torchsummary import summary
 from cGAN import cGAN
@@ -7,6 +8,8 @@ import os
 
 CUDA = torch.cuda.is_available()
 device = torch.device('cuda' if CUDA else 'cpu')
+
+print(torch.__version__)
 
 #arguments
 args = arg_parse()
