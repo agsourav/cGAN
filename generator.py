@@ -9,7 +9,7 @@ def transpose2d(in_ch, out_ch, k_sizes = [5,3], dil = [2,1], ops = [0,1]):
         nn.BatchNorm2d(out_ch),
         nn.ConvTranspose2d(out_ch, out_ch, kernel_size = k_sizes[1], stride = 2, padding = 0,
         output_padding = ops[1], dilation = dil[1]),
-        nn.ReLU(inplace = False)
+        nn.ReLU(inplace = True)
     )
     return layer
 

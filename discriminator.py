@@ -5,7 +5,7 @@ def conv2d(Cin, Cout, k_size, pad, stride):
     layer = nn.Sequential(
         nn.Conv2d(in_channels = Cin, out_channels= Cout, kernel_size = k_size, padding= pad,
         stride = stride),
-        nn.LeakyReLU(inplace = False)
+        nn.LeakyReLU(inplace = True)
     )
     return layer
 
@@ -13,7 +13,7 @@ def conv_block(Cin, Cout, k_size, pad, stride):
     layers = nn.Sequential(
         nn.Conv2d(Cin, Cout, kernel_size = k_size, padding = pad, stride = stride),
         nn.BatchNorm2d(Cout),
-        nn.LeakyReLU(inplace = False)
+        nn.LeakyReLU(inplace = True)
     )
     return layers
 
@@ -22,7 +22,7 @@ def final(Cin, Cout, num_features):
         nn.Conv2d(in_channels = Cin, out_channels= Cout, kernel_size = 3, padding= 1, stride = 2),
         nn.Flatten(),
         nn.Linear(num_features, 256),
-        nn.ReLU(inplace = False),
+        nn.ReLU(inplace = True),
         nn.Linear(256, 32),
         nn.Linear(32, 1),
         nn.Sigmoid()
