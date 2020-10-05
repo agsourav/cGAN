@@ -4,9 +4,11 @@ import torch.optim as optim
 from generator import cGANGenerator
 from discriminator import CGANDiscriminator
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 import os
 
+matplotlib.use('TkAgg')
 class cGAN():
     def __init__(self, num_classes, gen_inp, dis_inp, latent_size):
 
