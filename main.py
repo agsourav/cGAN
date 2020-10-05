@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 from torchvision import transforms, datasets
 from torchsummary import summary
+from PIL import ImageFile
 from cGAN import cGAN
 from utils import *
 import os
@@ -9,6 +10,7 @@ import os
 CUDA = torch.cuda.is_available()
 device = torch.device('cuda' if CUDA else 'cpu')
 
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 print(torch.__version__)
 
 #arguments
