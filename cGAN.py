@@ -96,10 +96,12 @@ class cGAN():
                     print('\tdiscriminator score: {0}\n\tgenerator score: {1}'.format(disScore, genScore))
                     print('discriminator loss {0}\tgenerator loss: {1}'.format(disloss.mean().item(), genloss.mean().item()))
 
-                    disloss.sum().backward(retain_graph = True)
-                    optim_D.step()
-                    genloss.sum().backward()
-                    optim_G.step()
+                disloss.mean().backward(retain_graph = True)
+                genloss.mean().backward()
+                optim_D.step()
+                optim_G.step()
+                optim_D.zero_grad()
+                optim_G.zero_grad()
                 
             np.append(self.disLosses, disloss.mean().item())
             np.append(self.genLosses, genloss.mean().item())
