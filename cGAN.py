@@ -100,8 +100,6 @@ class cGAN():
                 genloss.mean().backward()
                 optim_D.step()
                 optim_G.step()
-                optim_D.zero_grad()
-                optim_G.zero_grad()
                 
             np.append(self.disLosses, disloss.mean().item())
             np.append(self.genLosses, genloss.mean().item())
