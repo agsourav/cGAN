@@ -35,7 +35,7 @@ person = len(os.listdir(os.path.join(root_dir, 'person')))
 tot = pallets + forklifts + person
 train_ratio = 0.8
 num_train_samples = int(0.8*tot) 
-
+print(tot, num_train_samples)
 num_iters = num_train_samples//(batch_size*dis_iter)
 print(num_iters)
 data_transform = transforms.Compose(
