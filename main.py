@@ -66,6 +66,6 @@ else:
     labels = nn.functional.one_hot(labels, num_classes)
     labels = labels.float()
     gen_images = gan.infer(labels = labels)
-    gan.display_images(gen_images)
+    gan.display_images(gen_images, labels)
 
 

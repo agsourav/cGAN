@@ -137,9 +137,10 @@ class cGAN():
         gen_images = self.gen(z, labels)
         return gen_images
 
-    def display_images(self, inp):
+    def display_images(self, inp, labels):
         for i in range(inp.shape[0]):
             plt.imshow(inp[i].permute(1,2,0).detach().numpy())
+            plt.title(labels[i])
             plt.show()
 
     def plot_(self, s = 'scores'):
