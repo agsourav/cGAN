@@ -96,8 +96,10 @@ class cGAN():
                 disScore = self.get_disScore(real_images, labels)
                 genScore = self.get_genScore(z, labels)
                 
-                disloss = -disScore - (1.0 - genScore) 
-                genloss = -genScore
+                disloss = -torch.log(disScore.mean()) - torch.log(1.0 - genScore.mean())
+                genloss = -torch.log(genScore.mean())
+                #disloss = -disScore - (1.0 - genScore) 
+                #genloss = -genScore
                 if k%5==0:
                     print('\tdiscriminator score: {0}\n\tgenerator score: {1}'.format(disScore, genScore))
                     print('discriminator loss {0}\tgenerator loss: {1}'.format(disloss.mean().item(), genloss.mean().item()))
