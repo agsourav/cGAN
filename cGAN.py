@@ -109,10 +109,10 @@ class cGAN():
                 optim_D.step()
                 optim_G.step()
                 
-            np.append(self.disLosses, disloss.mean().item())
-            np.append(self.genLosses, genloss.mean().item())
-            np.append(self.genScores, genScore.mean().item())
-            np.append(self.disScores, disScore.mean().item())
+            self.disLosses = np.append(self.disLosses, disloss.mean().item())
+            self.genLosses = np.append(self.genLosses, genloss.mean().item())
+            self.genScores = np.append(self.genScores, genScore.mean().item())
+            self.disScores = np.append(self.disScores, disScore.mean().item())
 
             print('-'*20)
             if i%10==0:
