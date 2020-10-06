@@ -54,8 +54,10 @@ if train:
 
     gan = cGAN(num_classes, generator_inp, discriminator_inp, latent_size)
     gan.train(train_loader, epochs, num_iters, gen_lr, dis_lr, dis_iter, num_classes, device)
-    #gan.plot_()
-    #gan.plot_(s = 'losses')
+    print(gan.genScores, '\n', gan.disScores)
+    print(gan.genLosses, '\n', gan.disLosses)
+    gan.plot_()
+    gan.plot_(s = 'losses')
 
 else:
     gan = cGAN(num_classes, generator_inp, discriminator_inp, latent_size)
