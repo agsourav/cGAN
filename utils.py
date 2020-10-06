@@ -7,7 +7,7 @@ def arg_parse():
     parser = argparse.ArgumentParser(description= 'Conditional GAN')
     parser.add_argument('--image-dir', dest = 'image_dir', help = 'specify the path to images',
     default = 'real_images', type = str)
-    parser.add_argument('--eps', dest = 'epochs', help = 'number of epochs to train')
+    parser.add_argument('--eps', dest = 'epochs', help = 'number of epochs to train', default = 1)
     parser.add_argument('--gen-lr', dest = 'gen_lr', help = 'generator learning rate',
     default = 0.0002)
     parser.add_argument('--dis-lr', dest = 'dis_lr', help = 'discriminator learning rate',
