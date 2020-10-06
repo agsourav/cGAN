@@ -45,9 +45,10 @@ data_transform = transforms.Compose(
 
 dataset = datasets.ImageFolder(root = root_dir,
 transform= data_transform)
-
+print(len(dataset))
 training_dataset, validation_dataset = torch.utils.data.random_split(dataset,
 lengths = [num_train_samples, tot - num_train_samples])
+
 
 
 if train:
