@@ -55,9 +55,10 @@ if train:
     train_loader = torch.utils.data.DataLoader(training_dataset, batch_size = batch_size,
     shuffle = True, num_workers= 4)
 
+    loss_func = args.loss_func
     gan = cGAN(num_classes, generator_inp, discriminator_inp, latent_size)
     
-    gan.train(train_loader, epochs, num_iters, gen_lr, dis_lr, dis_iter, num_classes, device)
+    gan.train(train_loader, epochs, num_iters, gen_lr, dis_lr, dis_iter, num_classes, loss_func, device)
     gan.plot_()
     gan.plot_(s = 'losses')
 

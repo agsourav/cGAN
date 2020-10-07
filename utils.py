@@ -18,5 +18,7 @@ def arg_parse():
     default = 2)
     parser.add_argument('--ofn', dest = 'file_name', help = 'output file name',
     default = 'output_1_', type = str)
+    parser.add_argument('--lfn', dest = 'loss_func', help = 'mm for minimax loss/l2 for least squares',
+    default = 'mm', type = str)
     return parser.parse_args()
 

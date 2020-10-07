@@ -46,14 +46,14 @@ class cGAN():
         disScore = self.dis(x, labels)
         return disScore
 
-    def train(self, train_loader, epochs, num_iters, gen_lr, dis_lr, dis_epochs, num_classes, device):
+    def train(self, train_loader, epochs, num_iters, gen_lr, dis_lr, dis_epochs, num_classes, loss_func, device):
         self.dis = nn.DataParallel(self.dis)
         self.gen = nn.DataParallel(self.gen)
         self.dis.to(device)
         self.gen.to(device)
         
-        optim_G = optim.Adam(self.gen.parameters(), lr = gen_lr)
-        optim_D = optim.Adam(self.dis.parameters(), lr = dis_lr)
+        optim_G = optim.Adam(self.gen.parameters(), lr = gen_lr, betas = (0.5, 0.999))
+        optim_D = optim.Adam(self.dis.parameters(), lr = dis_lr, betas = (0.5, 0.999))
         
         
         start_epoch = 0
@@ -85,9 +85,12 @@ class cGAN():
                         print(e)
                         exit(0)
                     try:
-                        disloss = -disScore - (1 - genScore) 
+                        if loss_func == 'l2':
+                            disloss = (disScore.mean() - 1.0).pow(2) + (genScore.mean()).pow(2)
+                        else:
+                            disloss = -torch.log(disScore.mean() + eps) - torch.log(1.0 - genScore.mean() + eps) 
                         #print('dis iter: {0}\tdiscriminator loss {1}'.format(j, disloss))
-                        disloss.mean().backward()
+                        disloss.backward()
                         optim_D.step()
                     except Exception as e:
                         print(e)
@@ -106,20 +109,24 @@ class cGAN():
                 disscore_eps = np.append(disscore_eps, disScore.mean().item())
                 genscore_eps = np.append(genscore_eps, genScore.mean().item())
 
-                disloss = -torch.log(disScore.mean() + eps) - torch.log(1.0 - genScore.mean() + eps)
-                genloss = -torch.log(genScore.mean() + eps)
+                if loss_func == 'l2':
+                    disloss = (disScore.mean() - 1.0).pow(2) + (genScore.mean()).pow(2)
+                    genloss = (genScore.mean() - 1.0).pow(2)
+                else:
+                    disloss = -torch.log(disScore.mean() + eps) - torch.log(1.0 - genScore.mean() + eps)
+                    genloss = -torch.log(genScore.mean() + eps)
 
-                disloss_eps = np.append(disloss_eps, disloss.mean().item())
-                genloss_eps = np.append(genloss_eps, genloss.mean().item())
+                disloss_eps = np.append(disloss_eps, disloss.item())
+                genloss_eps = np.append(genloss_eps, genloss.item())
                 #disloss = -disScore - (1.0 - genScore) 
                 #genloss = -genScore
                 if k%5==0:
                     print('  iteration: {0}'.format(k))
                     print('\tdiscriminator score: {0:.5f}\n\tgenerator score: {1:.5f}'.format(disScore.mean().item(), genScore.mean().item()))
-                    print('\tdiscriminator loss {0:.5f}\n\tgenerator loss: {1:.5f}'.format(disloss.mean().item(), genloss.mean().item()))
+                    print('\tdiscriminator loss {0:.5f}\n\tgenerator loss: {1:.5f}'.format(disloss.item(), genloss.item()))
 
-                disloss.mean().backward(retain_graph = True)
-                genloss.mean().backward()
+                disloss.backward(retain_graph = True)
+                genloss.backward()
                 optim_D.step()
                 optim_G.step()
                 
