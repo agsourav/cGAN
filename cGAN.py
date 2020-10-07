@@ -19,6 +19,8 @@ class cGAN():
 
         self.gen = cGANGenerator(num_classes, latent_size, gen_inp)
         self.dis = CGANDiscriminator(num_classes, dis_inp)
+        self.dis = nn.DataParallel(self.dis)
+        self.gen = nn.DataParallel(self.gen)
         self.dis_path = 'weights/discriminator.pt'
         self.gen_path = 'weights/generator.pt'
         self.dis_check = ''
@@ -47,8 +49,7 @@ class cGAN():
         return disScore
 
     def train(self, train_loader, epochs, num_iters, gen_lr, dis_lr, dis_epochs, num_classes, loss_func, device):
-        self.dis = nn.DataParallel(self.dis)
-        self.gen = nn.DataParallel(self.gen)
+        
         self.dis.to(device)
         self.gen.to(device)
         
