@@ -62,8 +62,12 @@ class cGAN():
         for i in range(start_epoch, end_epoch):
             dataiter = iter(train_loader)
             print('Epoch: {0}'.format(i+1))
+            disloss_eps = np.array([])
+            genloss_eps = np.array([])
+            disscore_eps = np.array([])
+            genscore_eps = np.array([])
             for k in range(num_iters):
-                print('\titeration: {0}'.format(k+1))
+                #print('\titeration: {0}'.format(k+1))
                 for j in range(dis_epochs-1):
                     optim_D.zero_grad()
                     real_images, labels = next(dataiter)
@@ -98,23 +102,30 @@ class cGAN():
                 disScore = self.get_disScore(real_images, labels)
                 genScore = self.get_genScore(z, labels)
                 
+                disscore_eps = np.append(disscore_eps, disScore.mean().item())
+                genscore_eps = np.append(genscore_eps, genScore.mean().item())
+
                 disloss = -torch.log(disScore.mean() + eps) - torch.log(1.0 - genScore.mean() + eps)
                 genloss = -torch.log(genScore.mean() + eps)
+
+                disloss_eps = np.append(disloss_eps, disloss.mean().item())
+                genloss_eps = np.append(genloss_eps, genloss.mean().item())
                 #disloss = -disScore - (1.0 - genScore) 
                 #genloss = -genScore
                 if k%5==0:
-                    print('\tdiscriminator score: {0}\n\tgenerator score: {1}'.format(disScore, genScore))
-                    print('discriminator loss {0}\tgenerator loss: {1}'.format(disloss.mean().item(), genloss.mean().item()))
+                    print('\titeration: {0}'.format(k))
+                    print('\tdiscriminator score: {0:.5f}\n\tgenerator score: {1:.5f}'.format(disScore.mean().item(), genScore.mean().item()))
+                    print('discriminator loss {0:.5f}\tgenerator loss: {1:.5f}'.format(disloss.mean().item(), genloss.mean().item()))
 
                 disloss.mean().backward(retain_graph = True)
                 genloss.mean().backward()
                 optim_D.step()
                 optim_G.step()
                 
-            self.disLosses = np.append(self.disLosses, disloss.mean().item())
-            self.genLosses = np.append(self.genLosses, genloss.mean().item())
-            self.genScores = np.append(self.genScores, genScore.mean().item())
-            self.disScores = np.append(self.disScores, disScore.mean().item())
+            self.disLosses = np.append(self.disLosses, disloss_eps.mean())
+            self.genLosses = np.append(self.genLosses, genloss_eps.mean())
+            self.genScores = np.append(self.genScores, genscore_eps.mean())
+            self.disScores = np.append(self.disScores, disscore_eps.mean())
 
             print('-'*20)
             if i%10==0:
