@@ -16,5 +16,7 @@ def arg_parse():
     parser.add_argument('--bs', dest = 'batch_size', help = 'batch size for training', default = 4)
     parser.add_argument('--dis-eps', dest = 'dis_eps', help = 'number of iter for discriminator for each iter of generator',
     default = 2)
+    parser.add_argument('--ofn', dest = 'file_name', help = 'output file name',
+    default = 'output_1_', type = str)
     return parser.parse_args()
 

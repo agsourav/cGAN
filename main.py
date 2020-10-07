@@ -61,11 +61,12 @@ if train:
     gan.plot_(s = 'losses')
 
 else:
+    file_name = args.file_name
     gan = cGAN(num_classes, generator_inp, discriminator_inp, latent_size)
     labels = torch.tensor([[0],[1],[2]])
     labels = nn.functional.one_hot(labels, num_classes)
     labels = labels.float()
     gen_images = gan.infer(labels = labels)
-    gan.display_images(gen_images, labels)
+    gan.display_images(gen_images, labels, file_name)
 
 

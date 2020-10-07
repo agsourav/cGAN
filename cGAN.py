@@ -12,6 +12,8 @@ try:
     matplotlib.use('TkAgg')
 except Exception as e:
     print(e)
+
+eps = 1e-10
 class cGAN():
     def __init__(self, num_classes, gen_inp, dis_inp, latent_size):
 
@@ -96,8 +98,8 @@ class cGAN():
                 disScore = self.get_disScore(real_images, labels)
                 genScore = self.get_genScore(z, labels)
                 
-                disloss = -torch.log(disScore.mean()) - torch.log(1.0 - genScore.mean())
-                genloss = -torch.log(genScore.mean())
+                disloss = -torch.log(disScore.mean() + eps) - torch.log(1.0 - genScore.mean() + eps)
+                genloss = -torch.log(genScore.mean() + eps)
                 #disloss = -disScore - (1.0 - genScore) 
                 #genloss = -genScore
                 if k%5==0:
@@ -137,11 +139,12 @@ class cGAN():
         gen_images = self.gen(z, labels)
         return gen_images
 
-    def display_images(self, inp, labels):
+    def display_images(self, inp, labels, file_name):
         for i in range(inp.shape[0]):
             plt.imshow(inp[i].permute(1,2,0).detach().numpy())
-            plt.title(labels[i])
-            plt.show()
+            plt.title(str(labels[i]))
+            file_path = 'output/' + file_name + str(i) + '_1.png'
+            plt.savefig(file_path)
 
     def plot_(self, s = 'scores'):
         fig = plt.figure()
@@ -150,11 +153,13 @@ class cGAN():
             plt.plot(self.genLosses, 'g');
             plt.legend(['discriminator losses', 'generator losses']);
             plt.title('losses vs epochs');
-            plt.show() 
+            plt.savefig('output/losses.png')
+            plt.show()
         else:
             plt.plot(self.disScores, 'r');
             plt.plot(self.genScores, 'g');
             plt.legend(['discriminator scores', 'generator scores']);
             plt.title('scores vs epochs');
+            plt.savefig('output/scores.png')
             plt.show()
 
