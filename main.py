@@ -56,6 +56,7 @@ if train:
     shuffle = True, num_workers= 4)
 
     gan = cGAN(num_classes, generator_inp, discriminator_inp, latent_size)
+    gan = nn.DataParallel(gan)
     gan.train(train_loader, epochs, num_iters, gen_lr, dis_lr, dis_iter, num_classes, device)
     gan.plot_()
     gan.plot_(s = 'losses')
@@ -63,6 +64,7 @@ if train:
 else:
     file_name = args.file_name
     gan = cGAN(num_classes, generator_inp, discriminator_inp, latent_size)
+    
     labels = torch.tensor([[0],[1],[2]])
     labels = nn.functional.one_hot(labels, num_classes)
     labels = labels.float()
