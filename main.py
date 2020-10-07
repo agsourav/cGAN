@@ -56,7 +56,7 @@ if train:
     shuffle = True, num_workers= 4)
 
     gan = cGAN(num_classes, generator_inp, discriminator_inp, latent_size)
-    gan = nn.DataParallel(gan)
+    
     gan.train(train_loader, epochs, num_iters, gen_lr, dis_lr, dis_iter, num_classes, device)
     gan.plot_()
     gan.plot_(s = 'losses')

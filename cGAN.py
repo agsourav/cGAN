@@ -47,7 +47,8 @@ class cGAN():
         return disScore
 
     def train(self, train_loader, epochs, num_iters, gen_lr, dis_lr, dis_epochs, num_classes, device):
-
+        self.dis = nn.DataParallel(self.dis)
+        self.gen = nn.DataParallel(self.gen)
         self.dis.to(device)
         self.gen.to(device)
         
