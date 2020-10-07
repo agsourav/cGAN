@@ -113,9 +113,9 @@ class cGAN():
                 #disloss = -disScore - (1.0 - genScore) 
                 #genloss = -genScore
                 if k%5==0:
-                    print('\titeration: {0}'.format(k))
+                    print('  iteration: {0}'.format(k))
                     print('\tdiscriminator score: {0:.5f}\n\tgenerator score: {1:.5f}'.format(disScore.mean().item(), genScore.mean().item()))
-                    print('discriminator loss {0:.5f}\tgenerator loss: {1:.5f}'.format(disloss.mean().item(), genloss.mean().item()))
+                    print('\tdiscriminator loss {0:.5f}\n\tgenerator loss: {1:.5f}'.format(disloss.mean().item(), genloss.mean().item()))
 
                 disloss.mean().backward(retain_graph = True)
                 genloss.mean().backward()
