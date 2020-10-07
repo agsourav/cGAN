@@ -34,8 +34,8 @@ class cGAN():
         if os.path.exists(self.gen_path):
             self.gen_check = torch.load(self.gen_path)
             self.gen.load_state_dict(self.gen_check['model_state_dict'])
-            self.disLosses = self.gen_check['loss']
-            self.disScores = self.gen_check['score']
+            self.genLosses = self.gen_check['loss']
+            self.genScores = self.gen_check['score']
 
     def get_genScore(self, z, c):
         gen_out = self.gen(z,c)
